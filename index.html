@@ -274,7 +274,7 @@ addEventListener('keydown',e=>{keys[e.code]=1;if(e.code=='KeyP')togglePause();if
 addEventListener('keyup',e=>{keys[e.code]=0});
 function togglePause(){if(state=='title')return;paused=!paused;$('pause').textContent=paused?'▶':'⏸'}
 $('pause').onclick=e=>{e.stopPropagation();togglePause()};window.musicPaused=()=>paused;
-$('help').onclick=e=>{e.stopPropagation();panel(`<h2>🚗 Tam's Home Health Hustle</h2><p>Tam drives her little car around town to care for her home health patients. Get to each home before their appointment time, take good care of them, and finish your route before the day is done!</p><h3>Driving</h3><p><b>Touch & drag anywhere</b> — the car steers toward the way you drag, and drags farther = faster. Let go to slow down. (Keyboard: ↑ gas, ← → steer, ↓ brake.) Follow the <b>arrow</b> and the glowing ❤ at the patient's driveway, and roll to a stop there.</p><p>Roads are fastest — grass and dirt slow you down. Rain makes the road slick, so ease into turns! Watch for other cars and longhorns crossing.</p><h3>Care visits</h3><p>💊 <b>Meds:</b> sort pills into the organizer. 🩺 <b>Blood pressure:</b> pump the cuff, then tap at the first and last heartbeat. 🍽️ <b>Meals:</b> pick foods that fit the diet. 💬 <b>Pep talk:</b> tap the phrases in order to read an encouraging pep talk together.</p><p>P = pause, M = mute.</p>`)};
+$('help').onclick=e=>{e.stopPropagation();panel(`<h2>🚗 Tam's Home Health Hustle</h2><p>Tam drives her little car around town to care for her home health patients. Get to each home before their appointment time, take good care of them, and finish your route before the day is done!</p><h3>Driving</h3><p><b>Touch & drag anywhere</b> — the car steers toward the way you drag, and drags farther = faster. Let go to slow down. (Keyboard: ↑ gas, ← → steer, ↓ brake.) Follow the <b>arrow</b> and the glowing ❤ at the patient's driveway, and roll to a stop there.</p><p>Roads are fastest — grass and dirt slow you down. Rain makes the road slick, so ease into turns! Watch for other cars and longhorns crossing.</p><h3>Care visits</h3><p>💊 <b>Meds:</b> sort pills into the organizer. 🩺 <b>Blood pressure:</b> pump the cuff, then tap at the first and last heartbeat. 🍽️ <b>Meals:</b> pick foods that fit the diet. 💬 <b>Pep talk:</b> tap the phrases in order to read an encouraging pep talk together.</p><p>P = pause, M = mute.</p><h3 class="gp-help">🎮 Controller</h3><p class="gp-help">Stick or D-pad drives (▲ gas, ▼ brake), A gas, B brake, Start pause, Select mute. Visits and menus: D-pad to pick, A to select, B to go back.</p>`)};
 // ======================= RENDER =======================
 function onResize(){VW=CW/DPR;VH=CH/DPR;const aw=VW-SAFE.l-SAFE.r,ah=VH-SAFE.t-SAFE.b;SC=Math.min(aw/LW,ah/LH);OXs=SAFE.l+(aw-LW*SC)/2;OYs=SAFE.t+(ah-LH*SC)/2}
 const ZOOM=1;
@@ -657,4 +657,19 @@ window.__unlock={unlocked:un,sample:window.__SAMPLE||null,get badge(){return las
 #palbList li{min-height:30px;height:auto!important;font-size:16px!important}
 .tb{width:46px!important;height:46px!important}#mute{right:55px!important}#help{right:104px!important}
 </style>
+<!-- gamepad:start -->
+<script src="gamepad.js?v=1"></script>
+<script>
+(function(){if(typeof btn==='function'){var _b=btn;btn=function(x,y,w,h,label){var n=menuBtns.length,r=_b.apply(this,arguments);if(menuBtns.length>n&&typeof label==='string')menuBtns[menuBtns.length-1].label=label;return r}}})();
+GamepadSupport.init({
+ keys:{left:'ArrowLeft',right:'ArrowRight',up:'ArrowUp',down:'ArrowDown',a:'ArrowUp',b:'ArrowDown',start:'KeyP',back:'KeyM'},
+ menuKeys:{a:'Enter'},
+ ignoreSel:'#dock,#mute,#pause,#help,#inst,#ios,.tb,#dockHint',
+ backSel:'#pclose',
+ menu:function(){return !!document.querySelector('#palbOv.on,#smpLock.on')||panelOpen||paused||state!=='drive';},
+ items:GamepadSupport.list(function(){return (document.querySelector('#palbOv.on,#smpLock.on')||panelOpen)?[]:menuBtns;},{scale:function(){return SC},origin:function(){return [OXs,OYs]}}),
+ back:function(){if(document.querySelector('#palbOv.on,#smpLock.on')||panelOpen)return false;var b=menuBtns.filter(function(x){return /^\W*(back|close|menu|done|✕|×)\W*$/i.test(x.label||'')})[0];if(b){b.fn();return true}return false;}
+});
+</script>
+<!-- gamepad:end -->
 </body></html>
